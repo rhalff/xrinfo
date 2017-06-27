@@ -1,34 +1,41 @@
 import React from 'react';
+import loadWASM from './static_assets/lib/webdsp';
 import {
   AppRegistry,
   asset,
   Pano,
   Text,
-  View,
+  View
 } from 'react-vr';
+
+import VideoPanel from './vr/components/VideoPanel';
+import InfoPanel from './vr/components/InfoPanel';
+import sensorStore from './vr/stores/sensor';
+import Messenger from './vr/lib/Messenger';
+
+Messenger.on('webcam', (payload) => {
+  console.log('GOT DATA', payload);
+  sensorStore.webcam.uri = payload.uri;
+});
+
+Messenger.start();
 
 export default class xrinfo extends React.Component {
   render() {
     return (
       <View>
-        <Pano source={asset('chess-world.jpg')}/>
-        <Text
-          style={{
-            backgroundColor: '#777879',
-            fontSize: 0.8,
-            fontWeight: '400',
-            layoutOrigin: [0.5, 0.5],
-            paddingLeft: 0.2,
-            paddingRight: 0.2,
-            textAlign: 'center',
-            textAlignVertical: 'center',
-            transform: [{translate: [0, 0, -3]}],
-          }}>
-          hello
-        </Text>
+        <VideoPanel webcam={sensorStore.webcam} />
+        <InfoPanel store={sensorStore} />
       </View>
     );
   }
 };
+
+let webdsp = {};
+loadWASM().then(module => {
+  webdsp = module;
+  // things to execute on page load only after module is loaded
+  console.log('webdsp loaded?');
+});
 
 AppRegistry.registerComponent('xrinfo', () => xrinfo);

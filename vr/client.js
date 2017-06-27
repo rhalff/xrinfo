@@ -4,6 +4,9 @@
 
 // Auto-generated content.
 import {VRInstance} from 'react-vr-web';
+import requestUserMedia from './lib/requestUserMedia';
+import getWorker from './lib/getWorker';
+import getUserMedia from 'getusermedia';
 
 function init(bundle, parent, options) {
   const vr = new VRInstance(bundle, 'xrinfo', parent, {
@@ -15,6 +18,32 @@ function init(bundle, parent, options) {
   };
   // Begin the animation loop
   vr.start();
+
+  const worker = getWorker(vr);
+
+  setTimeout(() => {
+    getUserMedia((error, stream) => {
+      if (error) {
+        console.error('failed', error);
+      } else {
+        console.log('got a stream', stream);
+
+        const uri = window.URL.createObjectURL(stream);
+
+        console.log('created webcam uri', uri);
+
+        worker.postMessage({
+          type: 'webcam',
+          payload: {
+            uri: uri
+          }
+        });
+
+        console.log('posted message!?');
+      }
+    });
+  }, 1500);
+
   return vr;
 }
 
