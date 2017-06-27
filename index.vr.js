@@ -1,5 +1,4 @@
 import React from 'react';
-import loadWASM from './static_assets/lib/webdsp';
 import {
   AppRegistry,
   asset,
@@ -30,12 +29,5 @@ export default class xrinfo extends React.Component {
     );
   }
 };
-
-let webdsp = {};
-loadWASM().then(module => {
-  webdsp = module;
-  // things to execute on page load only after module is loaded
-  console.log('webdsp loaded?');
-});
 
 AppRegistry.registerComponent('xrinfo', () => xrinfo);

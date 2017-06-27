@@ -7,6 +7,7 @@ import {VRInstance} from 'react-vr-web';
 import requestUserMedia from './lib/requestUserMedia';
 import getWorker from './lib/getWorker';
 import getUserMedia from 'getusermedia';
+import loadWASM from '../static_assets/lib/webdsp';
 
 function init(bundle, parent, options) {
   const vr = new VRInstance(bundle, 'xrinfo', parent, {
@@ -46,5 +47,14 @@ function init(bundle, parent, options) {
 
   return vr;
 }
+
+let webdsp = {};
+loadWASM().then(module => {
+  webdsp = module;
+  // things to execute on page load only after module is loaded
+  console.log('webdsp loaded?');
+}).catch((error) => {
+  console.error('Failed to load webdsp', error)
+});
 
 window.ReactVR = {init};

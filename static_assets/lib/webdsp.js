@@ -127,6 +127,8 @@ function loadWASM() {
         .then(response => response.arrayBuffer())
         .then(buffer => {
           Module.wasmBinary = buffer;
+          // hope this works.
+          Module.wasmBinaryFile = STATIC_PATH + 'webdsp_c.wasm';
           // GLOBAL -- create custom event for complete glue script execution
           script = document.createElement('script');
           doneEvent = new Event('done');
@@ -275,7 +277,9 @@ function loadWASM() {
             //end convFilter family of filters
             resolve(wam);
           };
-        });
+        }).catch((error) => {
+        console.error('Failed to initialize webdsp', error);
+      });
     }
   });
 }
