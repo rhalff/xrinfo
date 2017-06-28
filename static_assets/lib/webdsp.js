@@ -1,5 +1,7 @@
 var Module = {};
 
+window.wam = {};
+
 var STATIC_PATH = '../static_assets/lib';
 
 function isImageData(element) {
@@ -145,8 +147,6 @@ function loadWASM() {
 
           function buildWam() {
             console.log('Emscripten boilerplate loaded.');
-            const wam = {};
-
             // filters
             wam['grayScale'] = function (pixelData) {
               const len = pixelData.length
